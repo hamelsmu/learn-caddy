@@ -1,0 +1,17 @@
+localhost
+
+encode zstd gzip
+templates
+try_files {path} {path}.html {path}/index.html
+file_server browse # the browse part shows a file browser when there isn't a index.html file
+
+# this matches /api/* with our without the end slash
+@myApiPath {
+    path_regexp ^/api(/.*)?$
+}
+
+# this redirects the /api path and replaces the /api part with /foo
+handle @myApiPath {
+    uri replace /api /foo
+    reverse_proxy http://127.0.0.1:9000
+}
